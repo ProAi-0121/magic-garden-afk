@@ -60,3 +60,6 @@ Keys: `q` quit, `g` save account cookies to `dumps/afk_accounts.json`.
   session per guest; the squad reclaims the session after 30s by default.
 - **Weird characters in the dashboard** — needs a terminal with UTF-8 and
   ANSI support (Windows Terminal works fine).
+
+Keep in mind this automates idle connections to the game, which its rules may
+not allow — use it on rooms you're welcome in.
