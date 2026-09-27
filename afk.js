@@ -15,7 +15,7 @@ const {
 
 const AFK_ROOM = process.env.AFK_ROOM || "AZZABR";
 
-const AFK_ACCOUNT_COUNT = Number(process.env.AFK_COUNT || 5);
+const AFK_ACCOUNT_COUNT = Math.max(1, Number(process.env.AFK_COUNT || 5));
 
 const HOST = "magicgarden.gg";
 
