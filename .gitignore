@@ -4,3 +4,4 @@ extra/
 dumps/
 node_modules/
 *.log
+.DS_Store

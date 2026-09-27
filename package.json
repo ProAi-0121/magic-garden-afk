@@ -7,6 +7,9 @@
     "start": "node afk.js"
   },
   "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "dotenv": "^18.0.4",
     "ws": "^8.20.0"
