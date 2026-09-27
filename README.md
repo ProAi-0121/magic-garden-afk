@@ -38,7 +38,7 @@ endpoint and are temporary by design.
 ## Usage
 
 ```bash
-node main.js
+npm start
 ```
 
 Keys: `q` quit, `g` save account cookies to `dumps/afk_accounts.json`.
@@ -49,8 +49,7 @@ Keys: `q` quit, `g` save account cookies to `dumps/afk_accounts.json`.
 ├── afk.js             # Entry point: provisioning + AFK squad manager
 ├── connection.js      # WebSocket connection (handshake, keepalive, reconnect)
 ├── utils/version.js   # Resolves the room's game version
-├── dumps/             # Cookie dumps (generated, gitignored)
-└── backup/            # Local recovery copy (gitignored)
+└── dumps/             # Cookie dumps (generated, gitignored)
 ```
 
 ## Troubleshooting
