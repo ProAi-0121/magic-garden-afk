@@ -268,7 +268,7 @@ function respawnAccount(acc, reason) {
     if (acc.respawnQueued) return;
     acc.respawnQueued = true;
     status.totalRespawns += 1;
-    console.log(`[RESPAWN] #${acc.index} (${reason}) - new guest incoming`);
+    console.log(`[RESPAWN] #${acc.index} (${reason}) - new guest respwan incoming`);
     try {
         if (acc.fatalWatcher) clearInterval(acc.fatalWatcher);
         acc.conn?.disconnect();
