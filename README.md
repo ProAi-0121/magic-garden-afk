@@ -54,7 +54,7 @@ For truly unattended runs Docker is the easiest option:
 
 ```bash
 docker build -t magic-garden-afk .
-docker compose up -d
+docker run -d --name mg-afk --env-file .env magic-garden-afk
 ```
 
 Logs go to the container, so `docker logs -f mg-afk` is your friend.
