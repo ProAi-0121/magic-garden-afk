@@ -27,6 +27,9 @@ const RESPAWN_DELAY_MS = 5000;
 const REPROVISION_DELAY_MS =
     Number(process.env.REPROVISION_MINUTES || 30) * 60000;
 
+// Hard cap so a fat-fingered + key can't provision an army.
+const SQUAD_CAP = Number(process.env.AFK_MAX || 20);
+
 const FATAL_CLOSE_CODES = new Set([
     4250, 4300, 4500, 4800, 4801, 4810, 4830, 4840, 4900,
 ]);
@@ -129,7 +132,7 @@ function renderFrame() {
     lines.push(`╠══ LOG ${"─".repeat(54)}`);
     for (const l of logLines) lines.push(`  ${l.slice(0, 100)}`);
     lines.push(`╠══ KEYS ${"─".repeat(52)}`);
-    lines.push("  [q] quit  [g] save account cookies to dumps/afk_accounts.json");
+    lines.push("  [q] quit  [g] save cookies  [+/-] grow/shrink squad");
     lines.push(`╚${"═".repeat(62)}`);
 
     let out = "\x1b[?25l";
@@ -340,8 +343,29 @@ function setupKeyboard() {
         if (key === "\u0003") return quit();
         if (key.toLowerCase() === "q") return quit();
         if (key.toLowerCase() === "g") return saveAccountFile();
+        if (key === "+") return growSquad();
+        if (key === "-") return shrinkSquad();
     });
-    console.log("[KEYS] [q] quit | [g] save account cookies");
+    console.log("[KEYS] [q] quit | [g] save account cookies | [+/-] grow/shrink squad");
+}
+
+function growSquad() {
+    if (accounts.length >= SQUAD_CAP) {
+        console.log(`[SQUAD] cap reached (${SQUAD_CAP}), not adding more`);
+        return;
+    }
+    const acc = { index: accounts.length + 1, state: "idle", stateSince: Date.now() };
+    accounts.push(acc);
+    console.log(`[SQUAD] growing to ${accounts.length}`);
+    startAccount(acc);
+}
+
+function shrinkSquad() {
+    const acc = accounts.pop();
+    if (!acc) return;
+    console.log(`[SQUAD] retiring #${acc.index}, squad down to ${accounts.length}`);
+    try { acc.fatalWatcher && clearInterval(acc.fatalWatcher); } catch {}
+    try { acc.conn?.disconnect(); } catch {}
 }
 
 function quit() {
