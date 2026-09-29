@@ -116,6 +116,7 @@ function renderFrame() {
     );
     lines.push(
         `║ Connected  ${connected}/${accounts.length}  |  ` +
+        `sell bonuse +${connected * 10}%  |  ` +
         `session ${fmtElapsed(status.sessionStart)}  |  ` +
         `reconnects ${status.totalReconnects}  |  ` +
         `respawns ${status.totalRespawns}`
