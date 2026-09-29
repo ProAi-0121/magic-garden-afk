@@ -392,7 +392,9 @@ async function main() {
     for (let i = 0; i < AFK_ACCOUNT_COUNT; i++) {
         const acc = { index: i + 1, state: "idle", stateSince: Date.now() };
         accounts.push(acc);
-        setTimeout(() => startAccount(acc), i * 1500).unref?.();
+        // Staggered start plus jitter so the squad doesn't log in in lockstep.
+        const delay = i * 1500 + Math.floor(Math.random() * 2000);
+        setTimeout(() => startAccount(acc), delay).unref?.();
     }
 
     setupKeyboard();
