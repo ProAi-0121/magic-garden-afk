@@ -41,7 +41,23 @@ endpoint and are temporary by design.
 npm start
 ```
 
-Keys: `q` quit, `g` save account cookies to `dumps/afk_accounts.json`.
+Keys: `q` quit, `g` save account cookies to `dumps/afk_accounts.json`,
+`+`/`-` grow or shrink the squad without restarting.
+
+## Running 24/7
+
+The point of this bot is staying in while you sleep, so it's built to self-repair:
+dropped guests reconnect with backoff, guests whose connection gives up for good
+are re-provisioned as fresh ones after `REPROVISION_MINUTES` (default 30).
+
+For truly unattended runs Docker is the easiest option:
+
+```bash
+docker build -t magic-garden-afk .
+docker compose up -d
+```
+
+Logs go to the container, so `docker logs -f mg-afk` is your friend.
 
 ## Project Structure
 
