@@ -21,6 +21,12 @@ const HOST = "magicgarden.gg";
 
 const RESPAWN_DELAY_MS = 5000;
 
+// When a connection gives up for good (retries exhausted, fatal close code),
+// wait this long before provisioning a completely fresh guest. Slow on
+// purpose: hammering the server right after a ban/kick makes things worse.
+const REPROVISION_DELAY_MS =
+    Number(process.env.REPROVISION_MINUTES || 30) * 60000;
+
 const FATAL_CLOSE_CODES = new Set([
     4250, 4300, 4500, 4800, 4801, 4810, 4830, 4840, 4900,
 ]);
@@ -235,6 +241,9 @@ async function startAccount(acc) {
                 if (connStatus !== "connecting") {
                     console.log(`[WS] #${acc.index} ${connStatus}${name}`);
                 }
+                if (connStatus === "error") {
+                    scheduleReprovision(acc, "connection gave up");
+                }
             }
             renderFrame();
         };
@@ -278,6 +287,24 @@ function respawnAccount(acc, reason) {
         acc.respawnQueued = false;
         startAccount(acc);
     }, RESPAWN_DELAY_MS).unref?.();
+}
+
+// A guest the connection layer has given up on (retries exhausted, or a fatal
+// close code we can't recover from). Red forever is useless overnight, so
+// queue a fresh provisioning attempt on a slow cadence.
+function scheduleReprovision(acc, reason) {
+    if (acc.reprovisionQueued) return;
+    acc.reprovisionQueued = true;
+    if (acc.fatalWatcher) clearInterval(acc.fatalWatcher);
+    acc.fatalWatcher = null;
+    console.log(
+        `[RE-PROVISION] #${acc.index} ${reason} - ` +
+        `fresh guest in ${Math.round(REPROVISION_DELAY_MS / 60000)} min`
+    );
+    setTimeout(() => {
+        acc.reprovisionQueued = false;
+        startAccount(acc);
+    }, REPROVISION_DELAY_MS).unref?.();
 }
 
 
