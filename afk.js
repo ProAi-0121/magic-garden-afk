@@ -114,9 +114,10 @@ function renderFrame() {
         `╔══ AFK SQUAD ── room ${AFK_ROOM} ── ` +
         `${new Date().toLocaleTimeString("en-GB")} ${"═".repeat(14)}`
     );
+    const bonusColor = connected === accounts.length ? "\x1b[32m" : "\x1b[33m";
     lines.push(
         `║ Connected  ${connected}/${accounts.length}  |  ` +
-        `sell bonuse +${connected * 10}%  |  ` +
+        `sell bonus ${bonusColor}+${connected * 10}%\x1b[0m  |  ` +
         `session ${fmtElapsed(status.sessionStart)}  |  ` +
         `reconnects ${status.totalReconnects}  |  ` +
         `respawns ${status.totalRespawns}`
