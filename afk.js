@@ -382,8 +382,25 @@ function quit() {
 
 process.on("SIGINT", quit);
 
+// The version fetch is the one thing standing between the process and the
+// squad: a single hiccup at startup used to kill the whole run.
+async function fetchVersionWithRetry(attempts = 5) {
+    for (let i = 1; i <= attempts; i++) {
+        try {
+            return await fetchVersionForRoom(AFK_ROOM);
+        } catch (err) {
+            if (i === attempts) throw err;
+            console.warn(
+                `[AFK] version fetch failed (${err.message}), ` +
+                `retry ${i}/${attempts - 1} in ${3 * i}s…`
+            );
+            await new Promise((r) => setTimeout(r, 3000 * i));
+        }
+    }
+}
+
 async function main() {
-    version = await fetchVersionForRoom(AFK_ROOM);
+    version = await fetchVersionWithRetry();
     console.log(
         `[AFK] joining room ${AFK_ROOM} with ${AFK_ACCOUNT_COUNT} ` +
         `guest accounts (version ${version})`
