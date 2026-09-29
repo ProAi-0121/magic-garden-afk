@@ -343,7 +343,7 @@ function setupKeyboard() {
         if (key === "\u0003") return quit();
         if (key.toLowerCase() === "q") return quit();
         if (key.toLowerCase() === "g") return saveAccountFile();
-        if (key === "+") return growSquad();
+        if (key === "+" || key === "=") return growSquad();
         if (key === "-") return shrinkSquad();
     });
     console.log("[KEYS] [q] quit | [g] save account cookies | [+/-] grow/shrink squad");
