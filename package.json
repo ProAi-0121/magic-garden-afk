@@ -1,6 +1,6 @@
 {
   "name": "magic-garden-afk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "AFK squad for Magic Garden rooms",
   "main": "afk.js",
   "scripts": {
